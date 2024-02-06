@@ -20,11 +20,11 @@ echo -e "$PRINT_INFO Today we have $PRINT_DATE"
 echo -e "$PRINT_INFO SCP/RSYNC Backup Script v1.12"
 
 # Load the configuration file in the same directory, if it exists.
-if [ -f "$(dirname "$0")/backup.ini" ]; then
- source "$(dirname "$0")/backup.ini"
-  echo -e "$PRINT_OK$BOLD backup.ini$NO_COLOR configuration file found. We are working"
+if [ -f "$(dirname "$0")/backup_via_ssh.ini" ]; then
+ source "$(dirname "$0")/backup_via_ssh.ini"
+  echo -e "$PRINT_OK$BOLD backup_via_ssh.ini$NO_COLOR configuration file found. We are working"
  else
-  echo -e "$PRINT_ERROR I cannot load the$BOLD backup.ini$NO_COLOR configuration file"
+  echo -e "$PRINT_ERROR I cannot load the$BOLD backup_via_ssh.ini$NO_COLOR configuration file"
   exit 1
 fi
 
@@ -41,11 +41,11 @@ backup_make_locally() {
     mkdir "$BACKUP_TEMP_FOLDER"
 
     # Load the configuration file in the same directory, if it exists.
-    if [ -f "$(dirname "$0")/backuptodo.conf" ]; then
-     source "$(dirname "$0")/backuptodo.conf"
-      echo -e "$PRINT_OK$BOLD backuptodo.conf$NO_COLOR configuration file found. We are working"
+    if [ -f "$(dirname "$0")/backup_to_do.conf" ]; then
+     source "$(dirname "$0")/backup_to_do.conf"
+      echo -e "$PRINT_OK$BOLD backup_to_do.conf$NO_COLOR configuration file found. We are working"
      else
-      echo -e "$PRINT_ERROR I cannot load the$BOLD backuptodo.conf$NO_COLOR configuration file"
+      echo -e "$PRINT_ERROR I cannot load the$BOLD backup_to_do.conf$NO_COLOR configuration file"
       exit 1
     fi
 
@@ -73,7 +73,7 @@ backup_make_remote() {
         rsync -auz $BACKUP_DIR/$NAMEf-backup-$date_iso.tar.gz -e "ssh -p "$SSH_PORT" -i "$SSH_KEY_FILE"" $SSH_USER@$SERVER_IP:$SERVER_LOCATION
     ;;
     *)
-        echo -e "$PRINT_ERROR Make your selection in the$BOLD backup.ini$NO_COLOR file in the section$BOLD SCPorRSYNC$NO_COLOR"
+        echo -e "$PRINT_ERROR Make your selection in the$BOLD backup_via_ssh.ini$NO_COLOR file in the section$BOLD SCPorRSYNC$NO_COLOR"
         exit 1
     ;;
 esac
