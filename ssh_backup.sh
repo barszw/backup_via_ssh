@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# If you have problem, use this #!/bin/bash
+
 ####################################
 # Linux SHH Backup Script
 ####################################
@@ -14,7 +16,6 @@ source "$(dirname "$0")/bash_color.conf"
 # date string
 date_iso=$(date --iso)
 
-
 echo -e "$PRINT_INFO Today we have $PRINT_DATE"
 echo -e "$PRINT_INFO SCP/RSYNC Backup Script v1.12"
 
@@ -27,7 +28,7 @@ if [ -f "$(dirname "$0")/backup.ini" ]; then
   exit 1
 fi
 
-#Directory where there is a temporary backup for your needs 'tar' - archiving tool
+# Directory where there is a temporary backup for your needs 'tar' - archiving tool
 BACKUP_TEMP_FOLDER="$BACKUP_DIR/backup-$date_iso"
 
 backup_clean() {
@@ -48,8 +49,8 @@ backup_make_locally() {
       exit 1
     fi
 
-    #tar folder into new .tar.gz with correct filename inside root
-    #tar -cz -C $BACKUP_DIR backup-$d/ | gpg -r $PGP_ID -o "$BACKUP_TEMP_DIR/backup-$d.tar.gz" --encrypt
+    # tar folder into new .tar.gz with correct filename inside $BACKUP_DIR
+    # tar -cz -C $BACKUP_DIR backup-$d/ | gpg -r $PGP_ID -o "$BACKUP_TEMP_DIR/backup-$d.tar.gz" --encrypt
     tar -Pczf "$BACKUP_DIR/$NAMEf-backup-$date_iso.tar.gz" $BACKUP_TEMP_FOLDER/
 
     echo -e "$PRINT_INFO The local backup was performed on $date_iso"
