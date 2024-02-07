@@ -1,30 +1,20 @@
 #!/usr/bin/env bash
 
+
 # Bash Color Basics: Coloring Text with Escape Sequences
 source "$(dirname "$0")/bash_color.conf"
 
 # Load the configuration file in the same directory, if it exists.
 if [ -f "$(dirname "$0")/backup_via_ssh.ini" ]; then
- source "$(dirname "$0")/backup_via_ssh.ini"
-  echo -e "$PRINT_OK$BOLD backup_via_ssh.ini$NO_COLOR configuration file found. We are working"
- else
-  echo -e "$PRINT_ERROR I cannot load the$BOLD backup_via_ssh.ini$NO_COLOR configuration file"
-  exit 1
+    source "$(dirname "$0")/backup_via_ssh.ini"
+        echo -e "$PRINT_OK$BOLD backup_via_ssh.ini$NO_COLOR configuration file found. We are working"
+    else
+        echo -e "$PRINT_ERROR I cannot load the$BOLD backup_via_ssh.ini$NO_COLOR configuration file"
+        exit 1
 fi
 
-get_abs_filename() {
-  # $1 : relative filename
-  filename=$1
-  parentdir=$(dirname "${filename}")
-
-  if [ -d "${filename}" ]; then
-      echo "$(cd "${filename}" && pwd)"
-  elif [ -d "${parentdir}" ]; then
-    echo "$(cd "${parentdir}" && pwd)/$(basename "${filename}")"
-  fi
-}
-
-croncmd="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin /bin/bash -c $(get_abs_filename "backup_via_ssh.sh") >> "$LOG"/"$CRON_LOG_NAME" 2>/dev/null"
+DIR_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+croncmd="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin /bin/bash -c "$DIR_PATH"/backup_via_ssh.sh >> "$LOG"/"$CRON_LOG_NAME" 2>/dev/null"
 cronjob="$CRON_Schedule $croncmd"
 
 
@@ -51,7 +41,7 @@ if [ -z "$CHOICES" ]; then
 else
     case "$CHOICES" in
     "Add")
-        sh -c ( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
+        ( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
         clear
         echo -e "$PRINT_INFO To view Cron Update logs: cat "$LOG"/"$CRON_LOG_NAME""
       ;;
