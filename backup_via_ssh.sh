@@ -119,14 +119,14 @@ backup_rotation() {
 
 # Directory structure and permissions
 case $TEST_DIRECTORY in
-    "TRUE")
-    test_directory
-    sed -i 's/^\(TEST\_DIRECTORY\s*=\s*\).*$/\1"FALSE"/' "$(dirname "$0")/configs/backup_via_ssh.ini"
+    "TRUE"|"true")
+        test_directory
+        sed -i 's/^\(TEST\_DIRECTORY\s*=\s*\).*$/\1"FALSE"/' "$(dirname "$0")/configs/backup_via_ssh.ini"
     ;;
-    "FALSE")
+    "FALSE"|"false")
     ;;
     *)
-    echo -e "$PRINT_ERROR Make your selection in the$BOLD configs/backup_via_ssh.ini$NO_COLOR file in the section$BOLD TEST_DIRECTORY expect TRUE or FALSE$NO_COLOR"
+        echo -e "$PRINT_ERROR Make your selection in the$BOLD configs/backup_via_ssh.ini$NO_COLOR file in the section$BOLD TEST_DIRECTORY expect TRUE or FALSE$NO_COLOR"
     ;;
 esac
 # Deleting the local temporary backup folder
