@@ -95,18 +95,18 @@ backup_make_remote() {
         echo -e "$PRINT_ERROR Make your selection in the$BOLD configs/backup_via_ssh.ini$NO_COLOR file in the section$BOLD SCPorRSYNC$NO_COLOR"
         exit 1
     ;;
-esac
+    esac
 
 sync_result=$?
-if [ "$sync_result" -eq "0" ]
-then
-    echo -e "$PRINT_INFO The remote backup was performed on $date_iso"
-    echo "The remote backup was performed on $date_iso" >> $LOG_DIR/$LOG_NAME-$date_iso.log
-else
-    echo -e "$PRINT_ERROR The remote server was down (no rysc and no remote file) on $date_iso"
-    echo "The remote server was down (no rysc and no remote file) on $date_iso" >> $LOG_DIR/$LOG_NAME-$date_iso.log
-fi
-}
+    if [ "$sync_result" -eq "0" ]
+    then
+        echo -e "$PRINT_INFO The remote backup was performed on $date_iso"
+        echo "The remote backup was performed on $date_iso" >> $LOG_DIR/$LOG_NAME-$date_iso.log
+    else
+        echo -e "$PRINT_ERROR The remote server was down (no rysc and no remote file) on $date_iso"
+        echo "The remote server was down (no rysc and no remote file) on $date_iso" >> $LOG_DIR/$LOG_NAME-$date_iso.log
+    fi
+    }
 
 backup_rotation() {
      echo -e "$PRINT_INFO Deleting backup and log files older than "$BACKUP_DAYS" days."
@@ -118,7 +118,17 @@ backup_rotation() {
 }
 
 # Directory structure and permissions
-test_directory
+case $TEST_DIRECTORY in
+    "TRUE")
+    test_directory
+    sed -i 's/^\(TEST\_DIRECTORY\s*=\s*\).*$/\1"FALSE"/' "$(dirname "$0")/configs/backup_via_ssh.ini"
+    ;;
+    "FALSE")
+    ;;
+    *)
+    echo -e "$PRINT_ERROR Make your selection in the$BOLD configs/backup_via_ssh.ini$NO_COLOR file in the section$BOLD TEST_DIRECTORY expect TRUE or FALSE$NO_COLOR"
+    ;;
+esac
 # Deleting the local temporary backup folder
 backup_clean
 # Make the Locally Backup
@@ -129,3 +139,4 @@ backup_make_remote
 backup_rotation
 # Deleting the local temporary backup folder
 backup_clean
+
