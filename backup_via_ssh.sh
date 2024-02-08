@@ -31,7 +31,7 @@ fi
 # Directory where there is a temporary backup for your needs 'tar' - archiving tool
 BACKUP_TEMP_FOLDER="$BACKUP_DIR/backup-$date_iso"
 
-test_directory() {
+first_install() {
     # $BACKUP_DIR
     if [ -d "$BACKUP_DIR" ]; then
     echo -e "$PRINT_INFO Directory "$BACKUP_DIR" exists."
@@ -118,10 +118,10 @@ backup_rotation() {
 }
 
 # Directory structure and permissions
-case $TEST_DIRECTORY in
+case $FIRST_INSTALL in
     "TRUE"|"true")
-        test_directory
-        sed -i 's/^\(TEST\_DIRECTORY\s*=\s*\).*$/\1"FALSE"/' "$(dirname "$0")/configs/backup_via_ssh.ini"
+        first_install
+        sed -i 's/^\(FIRST\_INSTALL\s*=\s*\).*$/\1"FALSE"/' "$(dirname "$0")/configs/backup_via_ssh.ini"
     ;;
     "FALSE"|"false")
     ;;
